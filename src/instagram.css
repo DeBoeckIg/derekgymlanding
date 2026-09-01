@@ -41,4 +41,13 @@
 .instagram-post__actions .instagram-post__icon-button[aria-pressed="true"]:first-child { color: #a54d45; }
 .instagram-post__body > p { margin: .45rem 0 0; color: #9aa5b2; font-size: .82rem; line-height: 1.5; }
 .instagram-post__body > p b { color: #f5f7fa; }
-@media (max-width: 520px) { .instagram-post { width: 100%; } }
+@media (max-width: 520px) {
+  .instagram-post { width: 100%; max-width: 100%; border-radius: 10px; }
+  .instagram-post__header { gap: .55rem; padding: .65rem; }
+  .instagram-post__header strong { overflow-wrap: anywhere; }
+  .instagram-post__body { padding: .65rem; }
+  .instagram-post__carousel-button { width: 36px; height: 36px; }
+  .instagram-post__carousel-button--previous { left: .5rem; }
+  .instagram-post__carousel-button--next { right: .5rem; }
+  .instagram-post__indicators { bottom: .5rem; }
+}

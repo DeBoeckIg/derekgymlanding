@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Bookmark, ChevronLeft, ChevronRight, Heart, MessageCircle, MoreHorizontal, Send } from 'lucide-react'
+import { Activity, Bookmark, Bike, ChevronLeft, ChevronRight, Dumbbell, Heart, MessageCircle, MoreHorizontal, Send, UserRound } from 'lucide-react'
 import { createRoot } from 'react-dom/client'
 import './instagram.css'
+import './discipline-carousel.css'
 
 type InstagramCarousel = [string, string, string, string]
 
@@ -86,6 +87,72 @@ export function InstagramPost({
   )
 }
 
+type DisciplineSlideSlots = [string, string, string, string, string, string, string]
+
+const disciplineSlides: DisciplineSlideSlots = [
+  '/assets/discipline-01.jpg',
+  '/assets/discipline-02.jpg',
+  '/assets/discipline-03.jpg',
+  '/assets/discipline-04.jpg',
+  '/assets/discipline-05.jpg',
+  '/assets/discipline-06.jpg',
+  '/assets/discipline-07.jpg',
+]
+
+const disciplineDescriptions = [
+  { title: 'Musculación', description: 'Fuerza, técnica y progreso a tu medida.', icon: Dumbbell },
+  { title: 'Funcional', description: 'Movimiento real para una vida más activa.', icon: Activity },
+  { title: 'Cardio & cycling', description: 'Energía, ritmo y una dosis extra de motivación.', icon: Bike },
+  { title: 'Personal training', description: 'Un plan diseñado exclusivamente para vos.', icon: UserRound },
+]
+
+export function DisciplineCarousel() {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
+  const goTo = (slide: number) => setCurrentSlide((slide + disciplineSlides.length) % disciplineSlides.length)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const updateMotionPreference = () => setReducedMotion(mediaQuery.matches)
+    updateMotionPreference()
+    mediaQuery.addEventListener('change', updateMotionPreference)
+    return () => mediaQuery.removeEventListener('change', updateMotionPreference)
+  }, [])
+
+  useEffect(() => {
+    if (reducedMotion || isHovered || isFocused) return
+    const timer = window.setInterval(() => setCurrentSlide((slide) => (slide + 1) % disciplineSlides.length), 2000)
+    return () => window.clearInterval(timer)
+  }, [isFocused, isHovered, reducedMotion])
+
+  return (
+    <div className="discipline-carousel">
+      <div className="discipline-carousel__viewport" role="region" aria-roledescription="carousel" aria-label="Derek training disciplines, 7 slides" tabIndex={0} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onFocus={() => setIsFocused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsFocused(false) }} onKeyDown={(event) => {
+        if (event.key === 'ArrowLeft') goTo(currentSlide - 1)
+        if (event.key === 'ArrowRight') goTo(currentSlide + 1)
+      }}>
+        <div className="discipline-carousel__track">
+          {disciplineSlides.map((imageUrl, index) => (
+            <div className={`discipline-carousel__slide ${index === currentSlide ? 'is-active' : ''} ${index === (currentSlide - 1 + disciplineSlides.length) % disciplineSlides.length ? 'is-previous' : ''} ${index === (currentSlide + 1) % disciplineSlides.length ? 'is-next' : ''}`} role="group" aria-roledescription="slide" aria-label={`Discipline image ${index + 1} of ${disciplineSlides.length}`} aria-hidden={index !== currentSlide} key={index}>
+              <img src={imageUrl} alt={`Derek gym discipline ${index + 1}`} />
+            </div>
+          ))}
+        </div>
+        <button className="discipline-carousel__control discipline-carousel__control--previous" type="button" aria-label="Previous discipline image" onClick={() => goTo(currentSlide - 1)}><ChevronLeft aria-hidden="true" /></button>
+        <button className="discipline-carousel__control discipline-carousel__control--next" type="button" aria-label="Next discipline image" onClick={() => goTo(currentSlide + 1)}><ChevronRight aria-hidden="true" /></button>
+      </div>
+      <div className="discipline-carousel__indicators" aria-label="Choose one of 7 discipline images">
+        {disciplineSlides.map((_, index) => <button key={index} type="button" aria-label={`Show discipline image ${index + 1}`} aria-current={currentSlide === index} onClick={() => goTo(index)} />)}
+      </div>
+      <dl className="discipline-descriptions">
+        {disciplineDescriptions.map(({ title, description, icon: Icon }) => <div className="discipline-description" key={title}><dt><Icon aria-hidden="true" />{title}</dt><dd>{description}</dd></div>)}
+      </dl>
+    </div>
+  )
+}
+
 const instagramRoot = document.getElementById('instagram-post-root')
 
 if (instagramRoot) {
@@ -105,3 +172,6 @@ if (instagramRoot) {
     />,
   )
 }
+
+const disciplineRoot = document.getElementById('discipline-carousel-root')
+if (disciplineRoot) createRoot(disciplineRoot).render(<DisciplineCarousel />)
