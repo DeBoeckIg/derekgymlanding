@@ -23,6 +23,20 @@ html,body{overflow-x:hidden}.menu-toggle{min-width:44px;min-height:44px}
 .plans-intro{max-width:42rem;margin-bottom:2rem}
 @media(min-width:701px){.plans{grid-template-columns:repeat(3,1fr)}}
 
+/* React carousels replace the legacy static grids without changing page flow. */
+#trainers>.trainers,#planes .plans{display:none}
+.card-carousel{overflow:hidden}
+.carousel-card-track{position:relative;min-height:clamp(19rem,32vw,24rem);display:grid;isolation:isolate}
+.card-carousel .carousel-card{grid-area:1/1;width:min(100%,24rem);margin:auto;opacity:0;visibility:hidden;filter:blur(5px);transform:translate3d(0,0,0) scale(.78);transition:transform .55s cubic-bezier(.2,.75,.25,1),opacity .55s ease,filter .55s ease,visibility .55s}
+.card-carousel .carousel-card.is-active{z-index:2;opacity:1;visibility:visible;filter:none;transform:translate3d(0,0,0) scale(1);pointer-events:auto}
+.card-carousel .carousel-card.is-previous,.card-carousel .carousel-card.is-next{z-index:1;opacity:.55;visibility:visible;filter:blur(2px) saturate(.7);transform:translate3d(-63%,0,0) scale(.78);pointer-events:none}
+.card-carousel .carousel-card.is-next{transform:translate3d(63%,0,0) scale(.78)}
+.coach-carousel .carousel-card-track{min-height:clamp(18rem,30vw,22rem)}
+.plans-carousel .carousel-card.is-previous,.plans-carousel .carousel-card.is-next{display:block}
+@media(max-width:700px){.card-carousel .carousel-card{width:min(78%,24rem)}.card-carousel .carousel-card.is-previous{transform:translate3d(-58%,0,0) scale(.76)}.card-carousel .carousel-card.is-next{transform:translate3d(58%,0,0) scale(.76)}.carousel-card-track{min-height:22rem}}
+@media(max-width:430px){.card-carousel .carousel-card{width:76%}.card-carousel .carousel-card.is-previous{transform:translate3d(-54%,0,0) scale(.72)}.card-carousel .carousel-card.is-next{transform:translate3d(54%,0,0) scale(.72)}.carousel-card-track{min-height:23rem}}
+@media(prefers-reduced-motion:reduce){.card-carousel .carousel-card{transition:none}}
+
 /* Responsive Instagram tiles and the standard Google Maps embed. */
  .insta-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}.insta-card{min-width:0;overflow:hidden;background:#fff;color:#15171a;border:1px solid #e1e4e8;border-radius:10px;box-shadow:0 8px 24px #0003}.insta-card-header{display:flex;align-items:center;gap:.6rem;min-height:4.25rem;padding:.75rem;font-size:.78rem;background:#fff}.insta-card-header div{display:flex;flex-direction:column}.insta-card-header small{color:#6b7280;font-size:.7rem}.insta-avatar{display:block;width:2.25rem;height:2.25rem;border:1px solid #d1d5db;border-radius:50%;object-fit:cover}.insta-menu{margin-left:auto;padding:.3rem;border:0;background:transparent;color:#6b7280;cursor:pointer}.insta-menu svg{width:1.25rem;height:1.25rem;fill:currentColor}.insta-image-link{display:block;aspect-ratio:4 / 3;overflow:hidden;background:#f3f4f6}.insta-image-link img{display:block;width:100%;height:100%;object-fit:contain;object-position:center}.insta-card-body{padding:.85rem;background:#fff;color:#15171a}.insta-actions{display:flex;gap:.7rem;margin-bottom:.55rem}.insta-actions button{display:grid;place-items:center;padding:0;border:0;background:transparent;color:#15171a;cursor:pointer}.insta-actions svg{width:1.25rem;height:1.25rem;fill:none;stroke:currentColor;stroke-width:1.7}.insta-actions button:hover,.insta-actions button:focus-visible{color:#1478ff}.insta-actions .insta-like[aria-pressed=true]{color:#e11d48}.insta-actions .insta-like[aria-pressed=true] svg{fill:currentColor}.insta-actions .insta-save{margin-left:auto}.insta-actions .insta-save[aria-pressed=true] svg{fill:#15171a}.insta-card-body small{font-size:.72rem;font-weight:700}.insta-card-body p{margin:.4rem 0 0;font-size:.82rem;line-height:1.5;color:#4b5563}.insta-card-body p b{color:#15171a}.map-wrap{min-width:0}.map-embed{display:block;width:100%;min-height:20rem;aspect-ratio:16 / 10;border:0;border-radius:10px}
 @media(max-width:900px){.insta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.insta-grid{grid-template-columns:1fr;gap:1.25rem}.insta-card{max-width:30rem;margin-inline:auto;width:100%}}@media(prefers-reduced-motion:reduce){.insta-card,.insta-image-link img{transition:none}.insta-card:hover{transform:none}}
@@ -57,3 +71,24 @@ html,body{overflow-x:hidden}.menu-toggle{min-width:44px;min-height:44px}
 .toast{position:fixed;z-index:20;right:1rem;bottom:1rem;width:max-content;max-width:calc(100vw - 2rem);padding:.85rem 1rem;border:1px solid #ffffff24;border-radius:10px;background:var(--panel);color:var(--text);box-shadow:0 16px 40px #0008;opacity:0;visibility:hidden;transform:translateY(.5rem);transition:opacity .2s ease,transform .2s ease,visibility .2s ease}
 .toast.show{opacity:1;visibility:visible;transform:none}
 @media(max-width:430px){.toast{right:.75rem;bottom:.75rem;max-width:calc(100vw - 1.5rem)}}
+
+/* Center benefit content and keep the overlapping location composition responsive. */
+.benefits>div{text-align:center}.benefits .icon{display:flex;justify-content:center}.split{position:relative}.photo-small{transform:translate(-18%,18%);z-index:2}.photo-main{z-index:1}
+@media(max-width:700px){.photo-small{transform:translate(10%,-18%);margin-bottom:-2rem}.split{padding-bottom:5rem}}
+
+/* React carousels replace the legacy static grids without changing their content. */
+.card-carousel{position:relative;min-width:0;padding-bottom:3.25rem;outline:none}.card-carousel:focus-visible{box-shadow:0 0 0 3px var(--cyan);border-radius:12px}.carousel-card-track{display:grid;min-height:18rem}.carousel-card{grid-area:1/1;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(1rem);transition:opacity .35s ease,transform .35s ease,visibility .35s}.carousel-card.is-active{opacity:1;visibility:visible;pointer-events:auto;transform:none}.card-carousel .carousel-card{width:min(100%,24rem);margin-inline:auto}.carousel-control{position:absolute;top:45%;z-index:2;display:grid;place-items:center;width:48px;height:48px;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--text);cursor:pointer}.carousel-control:hover,.carousel-control:focus-visible{background:var(--blue)}.carousel-control--previous{left:0}.carousel-control--next{right:0}.carousel-indicators{position:absolute;bottom:.5rem;left:50%;display:flex;gap:.5rem;transform:translateX(-50%)}.carousel-indicators button{width:10px;height:10px;padding:0;border:1px solid #ffffff66;border-radius:50%;background:transparent;cursor:pointer}.carousel-indicators button[aria-current=true]{background:var(--cyan);transform:scale(1.2)}.trainers>.trainer-card,.plans>.plan{display:none}.plans-carousel .carousel-card{padding:1.5rem}.plans-carousel .carousel-card.is-active{display:block}.plans-carousel .carousel-card:not(.is-active){display:none}
+@media(min-width:701px){.card-carousel .carousel-card{width:min(100%,28rem)}}
+@media(prefers-reduced-motion:reduce){.carousel-card{transition:none}}
+
+/* Final carousel state overrides keep adjacent previews visible. */
+#trainers>.trainers,#planes .plans{display:none}
+.card-carousel{overflow:hidden}
+.carousel-card-track{position:relative;min-height:clamp(19rem,32vw,24rem);isolation:isolate}
+.card-carousel .carousel-card{filter:blur(5px);transform:translate3d(0,0,0) scale(.78);transition:transform .55s cubic-bezier(.2,.75,.25,1),opacity .55s ease,filter .55s ease,visibility .55s}
+.card-carousel .carousel-card.is-active{filter:none;transform:translate3d(0,0,0) scale(1)}
+.card-carousel .carousel-card.is-previous,.card-carousel .carousel-card.is-next{display:block;opacity:.55;visibility:visible;filter:blur(2px) saturate(.7);transform:translate3d(-63%,0,0) scale(.78)}
+.card-carousel .carousel-card.is-next{transform:translate3d(63%,0,0) scale(.78)}
+@media(max-width:700px){.carousel-card-track{min-height:22rem}.card-carousel .carousel-card{width:min(78%,24rem)}.card-carousel .carousel-card.is-previous{transform:translate3d(-58%,0,0) scale(.76)}.card-carousel .carousel-card.is-next{transform:translate3d(58%,0,0) scale(.76)}}
+@media(max-width:430px){.carousel-card-track{min-height:23rem}.card-carousel .carousel-card{width:76%}.card-carousel .carousel-card.is-previous{transform:translate3d(-54%,0,0) scale(.72)}.card-carousel .carousel-card.is-next{transform:translate3d(54%,0,0) scale(.72)}}
+@media(prefers-reduced-motion:reduce){.card-carousel .carousel-card{transition:none}}

@@ -3,6 +3,18 @@ import { Activity, Bookmark, Bike, ChevronLeft, ChevronRight, Dumbbell, Heart, M
 import { createRoot } from 'react-dom/client'
 import './instagram.css'
 import './discipline-carousel.css'
+import discipline01 from '../assets/discipline-01.jpg'
+import discipline02 from '../assets/discipline-02.jpg'
+import discipline03 from '../assets/discipline-03.jpg'
+import discipline04 from '../assets/discipline-04.jpg'
+import discipline05 from '../assets/discipline-05.jpg'
+import discipline06 from '../assets/discipline-06.jpg'
+import discipline07 from '../assets/discipline-07.jpg'
+import instagram01 from '../assets/instagram-derek-01.jpeg'
+import instagram02 from '../assets/instagram-derek-02.jpeg'
+import instagram03 from '../assets/instagram-derek-03.jpeg'
+import instagram04 from '../assets/instagram-derek-04.jpeg'
+import derekLogo from '../assets/derek-logo.jpg'
 
 type InstagramCarousel = [string, string, string, string]
 
@@ -90,13 +102,7 @@ export function InstagramPost({
 type DisciplineSlideSlots = [string, string, string, string, string, string, string]
 
 const disciplineSlides: DisciplineSlideSlots = [
-  '/assets/discipline-01.jpg',
-  '/assets/discipline-02.jpg',
-  '/assets/discipline-03.jpg',
-  '/assets/discipline-04.jpg',
-  '/assets/discipline-05.jpg',
-  '/assets/discipline-06.jpg',
-  '/assets/discipline-07.jpg',
+  discipline01, discipline02, discipline03, discipline04, discipline05, discipline06, discipline07,
 ]
 
 const disciplineDescriptions = [
@@ -153,18 +159,45 @@ export function DisciplineCarousel() {
   )
 }
 
+type Coach = { name: string; schedule: string; className: string }
+const coaches: Coach[] = [
+  { name: 'Abril Salazar', schedule: 'Lunes a viernes · 07:00 — 12:00', className: 'a1' },
+  { name: 'Jesús Andrade', schedule: 'Lunes a viernes · 12:00 — 18:00', className: 'a2' },
+  { name: 'Gonzalo Agüero', schedule: 'Lunes a viernes · 18:00 — 23:00', className: 'a3' },
+  { name: 'Luz Gramajo', schedule: 'Lunes a viernes · 18:00 — 23:00', className: 'a4' },
+  { name: 'José Díaz', schedule: 'Sábados · 08:00 — 12:00 y 16:00 — 21:00 · Domingos · 18:00 — 22:00', className: 'a5' },
+]
+
+function useCarousel(length: number, initial = 0, autoplay = true) {
+  const [current, setCurrent] = useState(initial)
+  const [paused, setPaused] = useState(false)
+  useEffect(() => { if (!autoplay || paused) return; const timer = window.setInterval(() => setCurrent((value) => (value + 1) % length), 3500); return () => window.clearInterval(timer) }, [autoplay, length, paused])
+  const go = (step: number) => setCurrent((value) => (value + step + length) % length)
+  return { current, setCurrent, go, paused, setPaused }
+}
+
+function CarouselControls({ current, length, go, setCurrent, label }: { current: number; length: number; go: (step: number) => void; setCurrent: (value: number) => void; label: string }) {
+  return <><button className="carousel-control carousel-control--previous" type="button" aria-label={`Previous ${label}`} onClick={() => go(-1)}><ChevronLeft aria-hidden="true" /></button><button className="carousel-control carousel-control--next" type="button" aria-label={`Next ${label}`} onClick={() => go(1)}><ChevronRight aria-hidden="true" /></button><div className="carousel-indicators" aria-label={`Choose ${label}`}>{Array.from({ length }, (_, index) => <button key={index} type="button" aria-label={`Show ${label} ${index + 1}`} aria-current={current === index} onClick={() => setCurrent(index)} />)}</div></>
+}
+
+export function CoachCarousel() { const carousel = useCarousel(coaches.length); return <div className="card-carousel coach-carousel" role="region" aria-roledescription="carousel" aria-label="Derek coaches" tabIndex={0} onMouseEnter={() => carousel.setPaused(true)} onMouseLeave={() => carousel.setPaused(false)} onFocus={() => carousel.setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) carousel.setPaused(false) }} onKeyDown={(event) => { if (event.key === 'ArrowLeft') carousel.go(-1); if (event.key === 'ArrowRight') carousel.go(1) }}><div className="carousel-card-track">{coaches.map((coach, index) => { const previous = (carousel.current - 1 + coaches.length) % coaches.length; const next = (carousel.current + 1) % coaches.length; return <article className={`trainer-card carousel-card ${index === carousel.current ? 'is-active' : ''} ${index === previous ? 'is-previous' : ''} ${index === next ? 'is-next' : ''}`} aria-hidden={index !== carousel.current} key={coach.name}><div className={`avatar ${coach.className}`}></div><b>{coach.name}</b><span className="trainer-schedule">{coach.schedule}</span></article> })}</div><CarouselControls {...carousel} length={coaches.length} label="coach" /></div> }
+
+const plans = [
+  { type: 'Día', price: '$6000', detail: '', description: 'Ideal para entrenar cuando quieras.', featured: false },
+  { type: 'Mensual', price: '$30000', detail: '/mes', description: 'Constancia y acompañamiento todo el mes.', featured: true },
+  { type: 'Quincenal', price: '$18000', detail: '/15 días', description: 'Flexibilidad para mantener tu ritmo.', featured: false },
+]
+export function PlansCarousel() { const carousel = useCarousel(plans.length, 1, false); return <div className="card-carousel plans-carousel" role="region" aria-roledescription="carousel" aria-label="Derek plans" tabIndex={0} onFocus={() => carousel.setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) carousel.setPaused(false) }} onKeyDown={(event) => { if (event.key === 'ArrowLeft') carousel.go(-1); if (event.key === 'ArrowRight') carousel.go(1) }}><div className="carousel-card-track">{plans.map((plan, index) => { const previous = (carousel.current - 1 + plans.length) % plans.length; const next = (carousel.current + 1) % plans.length; return <article className={`plan carousel-card ${plan.featured ? 'featured' : ''} ${index === carousel.current ? 'is-active' : ''} ${index === previous ? 'is-previous' : ''} ${index === next ? 'is-next' : ''}`} aria-hidden={index !== carousel.current} key={plan.type}>{plan.featured && <label>Más elegido</label>}<span>{plan.type}</span><h3>{plan.price}<small>{plan.detail}</small></h3><p>{plan.description}</p><ul><li>Entrenador</li><li>Seguimiento</li><li>Rutina personalizada</li></ul><button className={`button ${plan.featured ? 'primary' : 'outline'} plan-btn`}>Elegir plan</button></article> })}</div><CarouselControls {...carousel} length={plans.length} label="plan" /></div> }
+
 const instagramRoot = document.getElementById('instagram-post-root')
 
 if (instagramRoot) {
   createRoot(instagramRoot).render(
     <InstagramPost
       username="derek_gym_lules"
-      userAvatar="/assets/derek-logo.jpg"
+       userAvatar={derekLogo}
       images={[
-        '/assets/instagram-derek-01.jpeg',
-        '/assets/instagram-derek-02.jpeg',
-        '/assets/instagram-derek-03.jpeg',
-        '/assets/instagram-derek-04.jpeg',
+         instagram01, instagram02, instagram03, instagram04,
       ] as InstagramCarousel}
       caption="Entrená a tu manera, todos los días."
       likesCount={128}
@@ -175,3 +208,10 @@ if (instagramRoot) {
 
 const disciplineRoot = document.getElementById('discipline-carousel-root')
 if (disciplineRoot) createRoot(disciplineRoot).render(<DisciplineCarousel />)
+const coachSection = document.getElementById('trainers')
+const coachRoot = document.createElement('div'); coachRoot.id = 'coach-carousel-root'
+if (coachSection) { coachSection.querySelector('.trainers')?.insertAdjacentElement('afterend', coachRoot); createRoot(coachRoot).render(<CoachCarousel />) }
+const plansSection = document.getElementById('planes')
+const plansRoot = document.createElement('div'); plansRoot.id = 'plans-carousel-root'
+if (plansSection) { plansSection.querySelector('.plans')?.insertAdjacentElement('afterend', plansRoot); createRoot(plansRoot).render(<PlansCarousel />) }
+document.querySelector('.band h2 em')?.replaceChildren('Empezamos juntos.')
