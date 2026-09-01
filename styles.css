@@ -37,6 +37,9 @@ html,body{overflow-x:hidden}.menu-toggle{min-width:44px;min-height:44px}
 /* Keep the final invitation distinct from the other photographic sections. */
 .final-cta{background-image:linear-gradient(90deg,#080a0de6,#080a0d99),url('assets/final-cta.jpg');background-position:center;background-size:cover}
 
+/* Keep mobile content visible if a browser cannot run the reveal observer. */
+@media(max-width:760px){.reveal,.trainer-card{opacity:1;transform:none}}
+
 /* The legacy tile selector must not style nested card content. */
 .insta-grid div{aspect-ratio:auto;background:none;border-radius:0}.insta-menu,.insta-actions button{min-width:44px;min-height:44px}
 
