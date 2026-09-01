@@ -15,6 +15,8 @@ import instagram02 from '../assets/instagram-derek-02.jpeg'
 import instagram03 from '../assets/instagram-derek-03.jpeg'
 import instagram04 from '../assets/instagram-derek-04.jpeg'
 import derekLogo from '../assets/derek-logo.jpg'
+import gymBackground from '../assets/gym-background.jpg'
+import ctaGym from '../assets/cta-gym.jpg'
 
 type InstagramCarousel = [string, string, string, string]
 
@@ -159,6 +161,25 @@ export function DisciplineCarousel() {
   )
 }
 
+const aboutSlides = [
+  { src: gymBackground, alt: 'Panoramic view of Derek Gym Center' },
+  { src: ctaGym, alt: 'Derek Gym Center training area' },
+] as const
+
+export function AboutCarousel() {
+  const [current, setCurrent] = useState(0)
+  const go = (step: number) => setCurrent((slide) => (slide + step + aboutSlides.length) % aboutSlides.length)
+
+  return <div className="about-carousel" role="region" aria-roledescription="carousel" aria-label="Derek Gym Center photos" tabIndex={0} onKeyDown={(event) => { if (event.key === 'ArrowLeft') go(-1); if (event.key === 'ArrowRight') go(1) }}>
+    <div className="about-carousel__viewport">
+      {aboutSlides.map((slide, index) => <div className={`about-carousel__slide ${index === current ? 'is-active' : ''}`} key={slide.src} role="group" aria-roledescription="slide" aria-label={`Photo ${index + 1} of ${aboutSlides.length}`} aria-hidden={index !== current}><img src={slide.src} alt={slide.alt} /></div>)}
+      <button className="about-carousel__control about-carousel__control--previous" type="button" aria-label="Previous photo" onClick={() => go(-1)}><ChevronLeft aria-hidden="true" /></button>
+      <button className="about-carousel__control about-carousel__control--next" type="button" aria-label="Next photo" onClick={() => go(1)}><ChevronRight aria-hidden="true" /></button>
+    </div>
+    <div className="about-carousel__indicators" aria-label="Choose photo">{aboutSlides.map((slide, index) => <button key={slide.src} type="button" aria-label={`Show photo ${index + 1}`} aria-current={current === index} onClick={() => setCurrent(index)} />)}</div>
+  </div>
+}
+
 type Coach = { name: string; schedule: string; className: string }
 const coaches: Coach[] = [
   { name: 'Abril Salazar', schedule: 'Lunes a viernes · 07:00 — 12:00', className: 'a1' },
@@ -208,6 +229,8 @@ if (instagramRoot) {
 
 const disciplineRoot = document.getElementById('discipline-carousel-root')
 if (disciplineRoot) createRoot(disciplineRoot).render(<DisciplineCarousel />)
+const aboutRoot = document.getElementById('about-carousel-root')
+if (aboutRoot) createRoot(aboutRoot).render(<AboutCarousel />)
 const coachSection = document.getElementById('trainers')
 const coachRoot = document.createElement('div'); coachRoot.id = 'coach-carousel-root'
 if (coachSection) { coachSection.querySelector('.trainers')?.insertAdjacentElement('afterend', coachRoot); createRoot(coachRoot).render(<CoachCarousel />) }

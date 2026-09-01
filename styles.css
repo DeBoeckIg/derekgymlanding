@@ -41,10 +41,6 @@ html,body{overflow-x:hidden}.menu-toggle{min-width:44px;min-height:44px}
  .insta-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}.insta-card{min-width:0;overflow:hidden;background:#fff;color:#15171a;border:1px solid #e1e4e8;border-radius:10px;box-shadow:0 8px 24px #0003}.insta-card-header{display:flex;align-items:center;gap:.6rem;min-height:4.25rem;padding:.75rem;font-size:.78rem;background:#fff}.insta-card-header div{display:flex;flex-direction:column}.insta-card-header small{color:#6b7280;font-size:.7rem}.insta-avatar{display:block;width:2.25rem;height:2.25rem;border:1px solid #d1d5db;border-radius:50%;object-fit:cover}.insta-menu{margin-left:auto;padding:.3rem;border:0;background:transparent;color:#6b7280;cursor:pointer}.insta-menu svg{width:1.25rem;height:1.25rem;fill:currentColor}.insta-image-link{display:block;aspect-ratio:4 / 3;overflow:hidden;background:#f3f4f6}.insta-image-link img{display:block;width:100%;height:100%;object-fit:contain;object-position:center}.insta-card-body{padding:.85rem;background:#fff;color:#15171a}.insta-actions{display:flex;gap:.7rem;margin-bottom:.55rem}.insta-actions button{display:grid;place-items:center;padding:0;border:0;background:transparent;color:#15171a;cursor:pointer}.insta-actions svg{width:1.25rem;height:1.25rem;fill:none;stroke:currentColor;stroke-width:1.7}.insta-actions button:hover,.insta-actions button:focus-visible{color:#1478ff}.insta-actions .insta-like[aria-pressed=true]{color:#e11d48}.insta-actions .insta-like[aria-pressed=true] svg{fill:currentColor}.insta-actions .insta-save{margin-left:auto}.insta-actions .insta-save[aria-pressed=true] svg{fill:#15171a}.insta-card-body small{font-size:.72rem;font-weight:700}.insta-card-body p{margin:.4rem 0 0;font-size:.82rem;line-height:1.5;color:#4b5563}.insta-card-body p b{color:#15171a}.map-wrap{min-width:0}.map-embed{display:block;width:100%;min-height:20rem;aspect-ratio:16 / 10;border:0;border-radius:10px}
 @media(max-width:900px){.insta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.insta-grid{grid-template-columns:1fr;gap:1.25rem}.insta-card{max-width:30rem;margin-inline:auto;width:100%}}@media(prefers-reduced-motion:reduce){.insta-card,.insta-image-link img{transition:none}.insta-card:hover{transform:none}}
 
-/* Layered local gym photography: the wide 6006 image stays behind the 5805 detail. */
-.photo-main{background-image:url('assets/gym-background.jpg');background-position:center;background-size:cover}
-.photo-small{background-image:url('assets/cta-gym.jpg');background-position:center;background-size:cover}
-
 /* The first-step section uses its dedicated local photo while retaining the scrim above it. */
  .band{background-image:linear-gradient(90deg,#080a0dcc,#080a0d88),url('assets/first-step-gym.jpg')}
 
@@ -73,13 +69,33 @@ html,body{overflow-x:hidden}.menu-toggle{min-width:44px;min-height:44px}
 @media(max-width:430px){.toast{right:.75rem;bottom:.75rem;max-width:calc(100vw - 1.5rem)}}
 
 /* Center benefit content and keep the overlapping location composition responsive. */
-.benefits>div{text-align:center}.benefits .icon{display:flex;justify-content:center}.split{position:relative}.photo-small{transform:translate(-18%,18%);z-index:2}.photo-main{z-index:1}
-@media(max-width:700px){.photo-small{transform:translate(10%,-18%);margin-bottom:-2rem}.split{padding-bottom:5rem}}
+.benefits>div{text-align:center}.benefits .icon{display:flex;justify-content:center}.split{position:relative}.about-carousel-root{min-width:0}
+.about-carousel{position:relative;min-width:0;padding-bottom:3.25rem;outline:none}.about-carousel:focus-visible{box-shadow:0 0 0 3px var(--cyan);border-radius:12px}.about-carousel__viewport{position:relative;min-height:24rem}.about-carousel__slide{position:absolute;inset:0;opacity:0;visibility:hidden;transform:translateX(1rem) scale(.98);transition:opacity .45s ease,transform .45s ease,visibility .45s}.about-carousel__slide.is-active{opacity:1;visibility:visible;transform:none}.about-carousel__slide img{display:block;width:100%;height:100%;min-height:24rem;object-fit:cover;border-radius:10px}.about-carousel__slide:nth-child(2) img{object-fit:contain;background:var(--panel);padding:2rem}.about-carousel__control{position:absolute;top:50%;z-index:2;display:grid;place-items:center;width:48px;height:48px;border:1px solid var(--line);border-radius:50%;background:#12161ccc;color:var(--text);cursor:pointer;transform:translateY(-50%)}.about-carousel__control:hover,.about-carousel__control:focus-visible{background:var(--blue)}.about-carousel__control--previous{left:1rem}.about-carousel__control--next{right:1rem}.about-carousel__indicators{position:absolute;bottom:.5rem;left:50%;display:flex;gap:.5rem;transform:translateX(-50%)}.about-carousel__indicators button{width:10px;height:10px;padding:0;border:1px solid #ffffff66;border-radius:50%;background:transparent;cursor:pointer}.about-carousel__indicators button[aria-current=true]{background:var(--cyan);transform:scale(1.2)}
+@media(max-width:700px){.split{padding-bottom:4.5rem}.about-carousel__viewport,.about-carousel__slide img{min-height:18rem}.about-carousel__slide img{max-height:22rem}.about-carousel__control--previous{left:.5rem}.about-carousel__control--next{right:.5rem}}
+
+/* Keep the sign framing lower and let the gym panorama fill its slide. */
+.about-carousel__slide:first-child img{object-position:center 72%}
+.about-carousel__slide:nth-child(2) img{object-fit:cover;padding:0;background:transparent}
+
+/* The centered coach keeps the same emphasis as the hovered card. */
+.coach-carousel .carousel-card.is-active{border-color:#1478ff99;box-shadow:0 0 0 1px #1478ff55,0 12px 32px #1478ff26}
+
+/* Give benefit cards a restrained blue heartbeat glow. */
+.benefits>div{position:relative;z-index:0;box-shadow:0 0 0 1px #1478ff22,0 0 18px #1478ff18;animation:benefit-pulse 2.8s ease-in-out infinite}
+.benefits>div:nth-child(2){animation-delay:.35s}.benefits>div:nth-child(3){animation-delay:.7s}.benefits>div:nth-child(4){animation-delay:1.05s}
+@keyframes benefit-pulse{0%,100%{box-shadow:0 0 0 1px #1478ff22,0 0 14px #1478ff14}50%{box-shadow:0 0 0 1px #1478ff66,0 0 30px #1478ff55,0 0 58px #54b9ff1f}}
+@media(prefers-reduced-motion:reduce){.benefits>div{animation:none;box-shadow:0 0 0 1px #1478ff44,0 0 20px #1478ff26}}
+
+/* Repeat the same blue heartbeat treatment in “Encontrá lo que te mueve”. */
+.discipline-grid .discipline{animation:benefit-pulse 2.8s ease-in-out infinite}
+.discipline-grid .discipline:nth-child(2){animation-delay:.35s}.discipline-grid .discipline:nth-child(3){animation-delay:.7s}.discipline-grid .discipline:nth-child(4){animation-delay:1.05s}
+.map-wrap.reveal{transition-delay:.18s}
 
 /* React carousels replace the legacy static grids without changing their content. */
 .card-carousel{position:relative;min-width:0;padding-bottom:3.25rem;outline:none}.card-carousel:focus-visible{box-shadow:0 0 0 3px var(--cyan);border-radius:12px}.carousel-card-track{display:grid;min-height:18rem}.carousel-card{grid-area:1/1;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(1rem);transition:opacity .35s ease,transform .35s ease,visibility .35s}.carousel-card.is-active{opacity:1;visibility:visible;pointer-events:auto;transform:none}.card-carousel .carousel-card{width:min(100%,24rem);margin-inline:auto}.carousel-control{position:absolute;top:45%;z-index:2;display:grid;place-items:center;width:48px;height:48px;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--text);cursor:pointer}.carousel-control:hover,.carousel-control:focus-visible{background:var(--blue)}.carousel-control--previous{left:0}.carousel-control--next{right:0}.carousel-indicators{position:absolute;bottom:.5rem;left:50%;display:flex;gap:.5rem;transform:translateX(-50%)}.carousel-indicators button{width:10px;height:10px;padding:0;border:1px solid #ffffff66;border-radius:50%;background:transparent;cursor:pointer}.carousel-indicators button[aria-current=true]{background:var(--cyan);transform:scale(1.2)}.trainers>.trainer-card,.plans>.plan{display:none}.plans-carousel .carousel-card{padding:1.5rem}.plans-carousel .carousel-card.is-active{display:block}.plans-carousel .carousel-card:not(.is-active){display:none}
 @media(min-width:701px){.card-carousel .carousel-card{width:min(100%,28rem)}}
 @media(prefers-reduced-motion:reduce){.carousel-card{transition:none}}
+@media(prefers-reduced-motion:reduce){.about-carousel__slide{transition:none}}
 
 /* Final carousel state overrides keep adjacent previews visible. */
 #trainers>.trainers,#planes .plans{display:none}
