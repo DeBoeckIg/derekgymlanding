@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { Activity, Bookmark, Bike, ChevronLeft, ChevronRight, Dumbbell, Heart, MessageCircle, MoreHorizontal, Send, UserRound } from 'lucide-react'
 import { createRoot } from 'react-dom/client'
 import './instagram.css'
@@ -35,6 +35,14 @@ type InstagramPostProps = {
   location?: string
 }
 
+function useSwipe(onSwipe: (direction: 'previous' | 'next') => void) {
+  const start = useRef<{ x: number; y: number } | null>(null)
+  const onPointerDown = (event: ReactPointerEvent<HTMLElement>) => { if (event.pointerType !== 'mouse' || event.button === 0) start.current = { x: event.clientX, y: event.clientY } }
+  const onPointerMove = (event: ReactPointerEvent<HTMLElement>) => { if (!start.current) return; const dx = event.clientX - start.current.x; const dy = event.clientY - start.current.y; if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) event.preventDefault() }
+  const onPointerUp = (event: ReactPointerEvent<HTMLElement>) => { if (!start.current) return; const dx = event.clientX - start.current.x; const dy = event.clientY - start.current.y; start.current = null; if (Math.abs(dx) >= 45 && Math.abs(dx) > Math.abs(dy) * 1.2) onSwipe(dx < 0 ? 'next' : 'previous') }
+  return { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: () => { start.current = null } }
+}
+
 export function InstagramPost({
   username,
   userAvatar,
@@ -48,6 +56,7 @@ export function InstagramPost({
   const [saved, setSaved] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
   const carouselImages = images ?? (imageUrl ? [imageUrl] : [])
+  const swipe = useSwipe((direction) => setCurrentSlide((slide) => direction === 'next' ? Math.min(carouselImages.length - 1, slide + 1) : Math.max(0, slide - 1)))
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -72,7 +81,7 @@ export function InstagramPost({
       </header>
 
       {carouselImages.length ? (
-        <div className="instagram-post__carousel" tabIndex={0} aria-label={`Photo ${currentSlide + 1} of ${carouselImages.length}`}>
+        <div className="instagram-post__carousel" tabIndex={0} aria-label={`Photo ${currentSlide + 1} of ${carouselImages.length}`} {...swipe}>
           <img className="instagram-post__media" src={carouselImages[currentSlide]} alt={`Instagram post photo ${currentSlide + 1} of ${carouselImages.length}`} />
           <button className="instagram-post__carousel-button instagram-post__carousel-button--previous" type="button" aria-label="Previous photo" disabled={currentSlide === 0} onClick={() => setCurrentSlide((slide) => Math.max(0, slide - 1))}><ChevronLeft aria-hidden="true" /></button>
           <button className="instagram-post__carousel-button instagram-post__carousel-button--next" type="button" aria-label="Next photo" disabled={currentSlide === carouselImages.length - 1} onClick={() => setCurrentSlide((slide) => Math.min(carouselImages.length - 1, slide + 1))}><ChevronRight aria-hidden="true" /></button>
@@ -125,6 +134,7 @@ export function DisciplineCarousel() {
   const [isFocused, setIsFocused] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
   const goTo = (slide: number) => setCurrentSlide((slide + disciplineSlides.length) % disciplineSlides.length)
+  const swipe = useSwipe((direction) => goTo(currentSlide + (direction === 'next' ? 1 : -1)))
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -142,7 +152,7 @@ export function DisciplineCarousel() {
 
   return (
     <div className="discipline-carousel">
-      <div className="discipline-carousel__viewport" role="region" aria-roledescription="carousel" aria-label="Derek training disciplines, 7 slides" tabIndex={0} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onFocus={() => setIsFocused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsFocused(false) }} onKeyDown={(event) => {
+      <div className="discipline-carousel__viewport" {...swipe} role="region" aria-roledescription="carousel" aria-label="Derek training disciplines, 7 slides" tabIndex={0} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onFocus={() => setIsFocused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsFocused(false) }} onKeyDown={(event) => {
         if (event.key === 'ArrowLeft') goTo(currentSlide - 1)
         if (event.key === 'ArrowRight') goTo(currentSlide + 1)
       }}>
@@ -174,8 +184,9 @@ const aboutSlides = [
 export function AboutCarousel() {
   const [current, setCurrent] = useState(0)
   const go = (step: number) => setCurrent((slide) => (slide + step + aboutSlides.length) % aboutSlides.length)
+  const swipe = useSwipe((direction) => go(direction === 'next' ? 1 : -1))
 
-  return <div className="about-carousel" role="region" aria-roledescription="carousel" aria-label="Derek Gym Center photos" tabIndex={0} onKeyDown={(event) => { if (event.key === 'ArrowLeft') go(-1); if (event.key === 'ArrowRight') go(1) }}>
+  return <div className="about-carousel" {...swipe} role="region" aria-roledescription="carousel" aria-label="Derek Gym Center photos" tabIndex={0} onKeyDown={(event) => { if (event.key === 'ArrowLeft') go(-1); if (event.key === 'ArrowRight') go(1) }}>
     <div className="about-carousel__viewport">
        {aboutSlides.map((slide, index) => <div className={`about-carousel__slide ${index === current ? 'is-active' : ''}`} key={slide.src} role="group" aria-roledescription="slide" aria-label={`Photo ${index + 1} of ${aboutSlides.length}`} aria-hidden={index !== current}><img src={slide.src} alt={slide.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" /></div>)}
       <button className="about-carousel__control about-carousel__control--previous" type="button" aria-label="Previous photo" onClick={() => go(-1)}><ChevronLeft aria-hidden="true" /></button>
