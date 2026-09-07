@@ -139,7 +139,7 @@ export function DisciplineCarousel() {
         <div className="discipline-carousel__track">
           {disciplineSlides.map((imageUrl, index) => (
             <div className={`discipline-carousel__slide ${index === currentSlide ? 'is-active' : ''} ${index === (currentSlide - 1 + disciplineSlides.length) % disciplineSlides.length ? 'is-previous' : ''} ${index === (currentSlide + 1) % disciplineSlides.length ? 'is-next' : ''}`} role="group" aria-roledescription="slide" aria-label={`Discipline image ${index + 1} of ${disciplineSlides.length}`} aria-hidden={index !== currentSlide} key={index}>
-              <img src={imageUrl} alt={`Derek gym discipline ${index + 1}`} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+              <img src={imageUrl} alt={`Derek gym discipline ${index + 1}`} loading={index === currentSlide || index === (currentSlide + 1) % disciplineSlides.length || index === (currentSlide - 1 + disciplineSlides.length) % disciplineSlides.length ? 'eager' : 'lazy'} fetchPriority={index === currentSlide ? 'high' : 'low'} decoding="async" />
             </div>
           ))}
         </div>
