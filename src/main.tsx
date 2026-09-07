@@ -82,7 +82,9 @@ export function InstagramPost({
 
       {carouselImages.length ? (
         <div className="instagram-post__carousel" tabIndex={0} aria-label={`Photo ${currentSlide + 1} of ${carouselImages.length}`} {...swipe}>
-          <img className="instagram-post__media" src={carouselImages[currentSlide]} alt={`Instagram post photo ${currentSlide + 1} of ${carouselImages.length}`} />
+           <div className="instagram-post__media-stack" aria-live="polite">
+             {carouselImages.map((image, index) => <img key={image} className={`instagram-post__media ${index === currentSlide ? 'is-active' : ''} ${index === currentSlide - 1 ? 'is-previous' : ''} ${index === currentSlide + 1 ? 'is-next' : ''}`} src={image} alt={index === currentSlide ? `Instagram post photo ${currentSlide + 1} of ${carouselImages.length}` : ''} aria-hidden={index !== currentSlide} />)}
+           </div>
           <button className="instagram-post__carousel-button instagram-post__carousel-button--previous" type="button" aria-label="Previous photo" disabled={currentSlide === 0} onClick={() => setCurrentSlide((slide) => Math.max(0, slide - 1))}><ChevronLeft aria-hidden="true" /></button>
           <button className="instagram-post__carousel-button instagram-post__carousel-button--next" type="button" aria-label="Next photo" disabled={currentSlide === carouselImages.length - 1} onClick={() => setCurrentSlide((slide) => Math.min(carouselImages.length - 1, slide + 1))}><ChevronRight aria-hidden="true" /></button>
           <div className="instagram-post__indicators" aria-label="Choose photo">
@@ -130,29 +132,12 @@ const disciplineDescriptions = [
 
 export function DisciplineCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [isHovered, setIsHovered] = useState(false)
-  const [isFocused, setIsFocused] = useState(false)
-  const [reducedMotion, setReducedMotion] = useState(false)
   const goTo = (slide: number) => setCurrentSlide((slide + disciplineSlides.length) % disciplineSlides.length)
   const swipe = useSwipe((direction) => goTo(currentSlide + (direction === 'next' ? 1 : -1)))
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const updateMotionPreference = () => setReducedMotion(mediaQuery.matches)
-    updateMotionPreference()
-    mediaQuery.addEventListener('change', updateMotionPreference)
-    return () => mediaQuery.removeEventListener('change', updateMotionPreference)
-  }, [])
-
-  useEffect(() => {
-    if (reducedMotion || isHovered || isFocused) return
-    const timer = window.setInterval(() => setCurrentSlide((slide) => (slide + 1) % disciplineSlides.length), 2000)
-    return () => window.clearInterval(timer)
-  }, [isFocused, isHovered, reducedMotion])
-
   return (
     <div className="discipline-carousel">
-      <div className="discipline-carousel__viewport" {...swipe} role="region" aria-roledescription="carousel" aria-label="Derek training disciplines, 7 slides" tabIndex={0} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onFocus={() => setIsFocused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsFocused(false) }} onKeyDown={(event) => {
+      <div className="discipline-carousel__viewport" {...swipe} role="region" aria-roledescription="carousel" aria-label="Derek training disciplines, 7 slides" tabIndex={0} onKeyDown={(event) => {
         if (event.key === 'ArrowLeft') goTo(currentSlide - 1)
         if (event.key === 'ArrowRight') goTo(currentSlide + 1)
       }}>
@@ -205,7 +190,7 @@ const coaches: Coach[] = [
   { name: 'José Díaz', schedule: 'Sábados · 08:00 — 12:00 y 16:00 — 21:00\nDomingos · 18:00 — 22:00', className: 'a5', photo: coachJose },
 ]
 
-function useCarousel(length: number, initial = 0, autoplay = true) {
+function useCarousel(length: number, initial = 0, autoplay = false) {
   const [current, setCurrent] = useState(initial)
   const [paused, setPaused] = useState(false)
   useEffect(() => { if (!autoplay || paused) return; const timer = window.setInterval(() => setCurrent((value) => (value + 1) % length), 3500); return () => window.clearInterval(timer) }, [autoplay, length, paused])
@@ -224,7 +209,7 @@ const plans = [
   { type: 'Mensual', price: '$30.000', detail: '/mes', description: 'Constancia y acompañamiento todo el mes.', featured: true },
   { type: 'Quincenal', price: '$18.000', detail: '/15 días', description: 'Flexibilidad para mantener tu ritmo.', featured: false },
 ]
-export function PlansCarousel() { const carousel = useCarousel(plans.length, 1, false); const swipe = useSwipe((direction) => carousel.go(direction === 'next' ? 1 : -1)); return <div className="card-carousel plans-carousel" {...swipe} role="region" aria-roledescription="carousel" aria-label="Derek plans" tabIndex={0} onFocus={() => carousel.setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) carousel.setPaused(false) }} onKeyDown={(event) => { if (event.key === 'ArrowLeft') carousel.go(-1); if (event.key === 'ArrowRight') carousel.go(1) }}><div className="carousel-card-track">{plans.map((plan, index) => { const previous = (carousel.current - 1 + plans.length) % plans.length; const next = (carousel.current + 1) % plans.length; return <article className={`plan carousel-card ${plan.featured ? 'featured' : ''} ${index === carousel.current ? 'is-active' : ''} ${index === previous ? 'is-previous' : ''} ${index === next ? 'is-next' : ''}`} aria-hidden={index !== carousel.current} key={plan.type}>{plan.featured && <label>Más elegido</label>}<span>{plan.type}</span><h3>{plan.price}<small>{plan.detail}</small></h3><p>{plan.description}</p><ul><li>Entrenador</li><li>Rutina personalizada</li></ul><small className="plan-payment">Efectivo / Transferencia</small><button className={`button ${plan.featured ? 'primary' : 'outline'} plan-btn`}>Elegir plan</button></article> })}</div><CarouselControls {...carousel} length={plans.length} label="plan" /></div> }
+export function PlansCarousel() { const carousel = useCarousel(plans.length, 1); const swipe = useSwipe((direction) => carousel.go(direction === 'next' ? 1 : -1)); return <div className="card-carousel plans-carousel" {...swipe} role="region" aria-roledescription="carousel" aria-label="Derek plans" tabIndex={0} onFocus={() => carousel.setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) carousel.setPaused(false) }} onKeyDown={(event) => { if (event.key === 'ArrowLeft') carousel.go(-1); if (event.key === 'ArrowRight') carousel.go(1) }}><div className="carousel-card-track">{plans.map((plan, index) => { const previous = (carousel.current - 1 + plans.length) % plans.length; const next = (carousel.current + 1) % plans.length; return <article className={`plan carousel-card ${plan.featured ? 'featured' : ''} ${index === carousel.current ? 'is-active' : ''} ${index === previous ? 'is-previous' : ''} ${index === next ? 'is-next' : ''}`} aria-hidden={index !== carousel.current} key={plan.type}>{plan.featured && <label>Más elegido</label>}<span>{plan.type}</span><h3>{plan.price}<small>{plan.detail}</small></h3><p>{plan.description}</p><ul><li>Entrenador</li><li>Asesoramiento y seguimiento</li></ul><small className="plan-payment">Efectivo / Transferencia</small><a href="https://ig.me/m/derek_gym_lules" target="_blank" rel="noopener" className={`button ${plan.featured ? 'primary' : 'outline'} plan-btn`}>Elegir plan</a></article> })}</div><CarouselControls {...carousel} length={plans.length} label="plan" /></div> }
 
 const instagramRoot = document.getElementById('instagram-post-root')
 
