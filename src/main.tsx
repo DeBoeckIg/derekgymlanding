@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { Activity, Bookmark, Bike, ChevronLeft, ChevronRight, Dumbbell, Heart, MessageCircle, MoreHorizontal, Send, UserRound } from 'lucide-react'
+import { flushSync } from 'react-dom'
 import { createRoot } from 'react-dom/client'
 import './instagram.css'
 import './discipline-carousel.css'
@@ -237,8 +238,10 @@ const coachRoot = document.createElement('div'); coachRoot.id = 'coach-carousel-
 if (coachSection) {
   coachSection.querySelector('.trainers')?.insertAdjacentElement('afterend', coachRoot)
   try {
-    createRoot(coachRoot).render(<CoachCarousel />)
-    coachSection.classList.add('react-carousel-ready')
+    flushSync(() => createRoot(coachRoot).render(<CoachCarousel />))
+    requestAnimationFrame(() => {
+      if (coachRoot.childElementCount > 0) coachSection.classList.add('react-carousel-ready')
+    })
   } catch (error) {
     console.error('Coach carousel failed; keeping the static fallback visible.', error)
   }
@@ -248,8 +251,10 @@ const plansRoot = document.createElement('div'); plansRoot.id = 'plans-carousel-
 if (plansSection) {
   plansSection.querySelector('.plans')?.insertAdjacentElement('afterend', plansRoot)
   try {
-    createRoot(plansRoot).render(<PlansCarousel />)
-    plansSection.classList.add('react-carousel-ready')
+    flushSync(() => createRoot(plansRoot).render(<PlansCarousel />))
+    requestAnimationFrame(() => {
+      if (plansRoot.childElementCount > 0) plansSection.classList.add('react-carousel-ready')
+    })
   } catch (error) {
     console.error('Plans carousel failed; keeping the static fallback visible.', error)
   }
