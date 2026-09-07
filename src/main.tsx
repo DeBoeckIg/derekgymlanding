@@ -182,7 +182,7 @@ const coaches: Coach[] = [
   { name: 'Jesús Andrade', schedule: 'Lunes a viernes · 12:00 — 18:00', className: 'a2', photo: coachJesus },
   { name: 'Gonzalo Agüero', schedule: 'Lunes a viernes · 18:00 — 23:00', className: 'a3', photo: coachGonzalo },
   { name: 'Luz Gramajo', schedule: 'Lunes a viernes · 18:00 — 23:00', className: 'a4', photo: coachLuz },
-  { name: 'José Díaz', schedule: 'Sábados · 08:00 — 12:00 y 16:00 — 21:00\nDomingos · 18:00 — 22:00', className: 'a5', photo: coachJose },
+  { name: 'José Díaz', schedule: 'Sábados · 10:00 — 12:00 y 16:00 — 21:00\nDomingos · 18:00 — 22:00', className: 'a5', photo: coachJose },
 ]
 
 function useCarousel(length: number, initial = 0, autoplay = false) {
