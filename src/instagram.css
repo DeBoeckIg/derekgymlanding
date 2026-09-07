@@ -32,8 +32,8 @@
 .instagram-post__carousel-button--previous { left: .75rem; }
 .instagram-post__carousel-button--next { right: .75rem; }
 .instagram-post__indicators { position: absolute; bottom: .65rem; left: 50%; display: flex; gap: .35rem; transform: translateX(-50%); }
-.instagram-post__indicators button { width: .4rem; height: .4rem; padding: 0; background: #ffffff80; border: 0; border-radius: 50%; cursor: pointer; }
-.instagram-post__indicators button[aria-current="true"] { background: #fff; }
+.instagram-post__indicators button { width: 2rem; height: 2.75rem; padding: 0; background: transparent; border: 0; border-radius: 50%; cursor: pointer; }
+.instagram-post__indicators button[aria-current="true"] { background: transparent; }
 .instagram-post__placeholder { background: linear-gradient(135deg, #1a2028, #080a0d); }
 .instagram-post__actions { display: flex; gap: .25rem; margin: -.35rem 0 .5rem -.5rem; }
 .instagram-post__save { margin-left: auto; }
