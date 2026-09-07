@@ -25,7 +25,7 @@ html,body{overflow-x:hidden}.menu-toggle{min-width:44px;min-height:44px}
 @media(min-width:701px){.plans{grid-template-columns:repeat(3,1fr)}}
 
 /* React carousels replace the legacy static grids without changing page flow. */
-#trainers.react-carousel-ready>.trainers,#planes.react-carousel-ready .plans{display:none}
+#profes.react-carousel-ready>.trainers,#planes.react-carousel-ready .plans{display:none}
 .card-carousel{overflow:hidden}
 .carousel-card-track{position:relative;min-height:clamp(19rem,32vw,24rem);display:grid;isolation:isolate}
 .card-carousel .carousel-card{grid-area:1/1;width:min(100%,24rem);margin:auto;opacity:0;visibility:hidden;filter:blur(5px);transform:translate3d(0,0,0) scale(.78);transition:transform .55s cubic-bezier(.2,.75,.25,1),opacity .55s ease,filter .55s ease,visibility .55s}
@@ -105,10 +105,14 @@ img,iframe,svg{max-width:100%}.button,.nav-cta,.text-link{touch-action:manipulat
 .card-carousel{position:relative;min-width:0;padding-bottom:3.25rem;outline:none}.card-carousel:focus-visible{box-shadow:0 0 0 3px var(--cyan);border-radius:12px}.carousel-card-track{display:grid;min-height:18rem}.carousel-card{grid-area:1/1;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(1rem);transition:opacity .35s ease,transform .35s ease,visibility .35s}.carousel-card.is-active{opacity:1;visibility:visible;pointer-events:auto;transform:none}.card-carousel .carousel-card{width:min(100%,24rem);margin-inline:auto}.carousel-control{position:absolute;top:45%;z-index:2;display:grid;place-items:center;width:48px;height:48px;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--text);cursor:pointer}.carousel-control:hover,.carousel-control:focus-visible{background:var(--blue)}.carousel-control--previous{left:0}.carousel-control--next{right:0}.carousel-indicators{position:absolute;bottom:.5rem;left:50%;display:flex;gap:.5rem;transform:translateX(-50%)}.carousel-indicators button{width:10px;height:10px;padding:0;border:1px solid #ffffff66;border-radius:50%;background:transparent;cursor:pointer}.carousel-indicators button[aria-current=true]{background:var(--cyan);transform:scale(1.2)}.trainers>.trainer-card,.plans>.plan{display:none}.plans-carousel .carousel-card{padding:1.5rem}.plans-carousel .carousel-card.is-active{display:block}.plans-carousel .carousel-card:not(.is-active){display:none}
 @media(min-width:701px){.card-carousel .carousel-card{width:min(100%,28rem)}}
 @media(prefers-reduced-motion:reduce){.carousel-card{transition:none}}
+
+/* Pause paint-heavy effects while the page is moving; restore the same visual state at rest. */
+body.is-scrolling .nav{backdrop-filter:none;background:#080a0df2}
+body.is-scrolling .benefits>div,body.is-scrolling .discipline-grid .discipline,body.is-scrolling .discipline-description{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.about-carousel__slide{transition:none}}
 
 /* Final carousel state overrides keep adjacent previews visible. */
-#trainers.react-carousel-ready>.trainers,#planes.react-carousel-ready .plans{display:none}
+#profes.react-carousel-ready>.trainers,#planes.react-carousel-ready .plans{display:none}
 .card-carousel{overflow:hidden}
 .carousel-card-track{position:relative;min-height:clamp(19rem,32vw,24rem);isolation:isolate}
 .card-carousel .carousel-card{filter:blur(5px);transform:translate3d(0,0,0) scale(.78);transition:transform .55s cubic-bezier(.2,.75,.25,1),opacity .55s ease,filter .55s ease,visibility .55s}

@@ -84,7 +84,7 @@ export function InstagramPost({
       {carouselImages.length ? (
         <div className="instagram-post__carousel" tabIndex={0} aria-label={`Photo ${currentSlide + 1} of ${carouselImages.length}`} {...swipe}>
            <div className="instagram-post__media-stack" aria-live="polite">
-             {carouselImages.map((image, index) => <img key={image} className={`instagram-post__media ${index === currentSlide ? 'is-active' : ''} ${index === currentSlide - 1 ? 'is-previous' : ''} ${index === currentSlide + 1 ? 'is-next' : ''}`} src={image} alt={index === currentSlide ? `Instagram post photo ${currentSlide + 1} of ${carouselImages.length}` : ''} aria-hidden={index !== currentSlide} />)}
+             {carouselImages.map((image, index) => <img key={image} className={`instagram-post__media ${index === currentSlide ? 'is-active' : ''} ${index === currentSlide - 1 ? 'is-previous' : ''} ${index === currentSlide + 1 ? 'is-next' : ''}`} src={image} loading={index === currentSlide ? 'eager' : 'lazy'} decoding="async" alt={index === currentSlide ? `Instagram post photo ${currentSlide + 1} of ${carouselImages.length}` : ''} aria-hidden={index !== currentSlide} />)}
            </div>
           <button className="instagram-post__carousel-button instagram-post__carousel-button--previous" type="button" aria-label="Previous photo" disabled={currentSlide === 0} onClick={() => setCurrentSlide((slide) => Math.max(0, slide - 1))}><ChevronLeft aria-hidden="true" /></button>
           <button className="instagram-post__carousel-button instagram-post__carousel-button--next" type="button" aria-label="Next photo" disabled={currentSlide === carouselImages.length - 1} onClick={() => setCurrentSlide((slide) => Math.min(carouselImages.length - 1, slide + 1))}><ChevronRight aria-hidden="true" /></button>
@@ -233,7 +233,7 @@ const disciplineRoot = document.getElementById('discipline-carousel-root')
 if (disciplineRoot) createRoot(disciplineRoot).render(<DisciplineCarousel />)
 const aboutRoot = document.getElementById('about-carousel-root')
 if (aboutRoot) createRoot(aboutRoot).render(<AboutCarousel />)
-const coachSection = document.getElementById('trainers')
+const coachSection = document.getElementById('profes')
 const coachRoot = document.createElement('div'); coachRoot.id = 'coach-carousel-root'
 if (coachSection) {
   coachSection.querySelector('.trainers')?.insertAdjacentElement('afterend', coachRoot)
