@@ -15,6 +15,7 @@ import instagram01 from '../assets/instagram-derek-01.jpeg'
 import instagram02 from '../assets/instagram-derek-02.jpeg'
 import instagram03 from '../assets/instagram-derek-03.jpeg'
 import instagram04 from '../assets/instagram-derek-04.jpeg'
+import instagram05 from '../assets/instagram-derek-05.png'
 import derekLogo from '../assets/derek-logo.jpg'
 import gymBackground from '../assets/gym-background.jpg'
 import ctaGym from '../assets/cta-gym.jpg'
@@ -24,7 +25,7 @@ import coachGonzalo from '../assets/coach-gonzalo-aguero.png'
 import coachLuz from '../assets/coach-luz-gramajo.png'
 import coachJose from '../assets/coach-jose-diaz.png'
 
-type InstagramCarousel = [string, string, string, string]
+type InstagramCarousel = [string, string, string, string, string]
 
 type InstagramPostProps = {
   username: string
@@ -59,14 +60,7 @@ export function InstagramPost({
   const carouselImages = images ?? (imageUrl ? [imageUrl] : [])
   const swipe = useSwipe((direction) => setCurrentSlide((slide) => direction === 'next' ? Math.min(carouselImages.length - 1, slide + 1) : Math.max(0, slide - 1)))
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowLeft') setCurrentSlide((slide) => Math.max(0, slide - 1))
-      if (event.key === 'ArrowRight') setCurrentSlide((slide) => Math.min(carouselImages.length - 1, slide + 1))
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [carouselImages.length])
+  const goTo = (slide: number) => setCurrentSlide((slide + carouselImages.length) % carouselImages.length)
 
   return (
     <article className="instagram-post" aria-label={`Instagram post by ${username}`}>
@@ -82,14 +76,14 @@ export function InstagramPost({
       </header>
 
       {carouselImages.length ? (
-        <div className="instagram-post__carousel" tabIndex={0} aria-label={`Photo ${currentSlide + 1} of ${carouselImages.length}`} {...swipe}>
+         <div className="instagram-post__carousel" tabIndex={0} role="region" aria-roledescription="carousel" aria-label={`Photo ${currentSlide + 1} of ${carouselImages.length}`} {...swipe} onKeyDown={(event) => { if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); event.stopPropagation(); goTo(currentSlide + (event.key === 'ArrowRight' ? 1 : -1)) } }}>
            <div className="instagram-post__media-stack" aria-live="polite">
              {carouselImages.map((image, index) => <img key={image} className={`instagram-post__media ${index === currentSlide ? 'is-active' : ''} ${index === currentSlide - 1 ? 'is-previous' : ''} ${index === currentSlide + 1 ? 'is-next' : ''}`} src={image} loading={index === currentSlide ? 'eager' : 'lazy'} decoding="async" alt={index === currentSlide ? `Instagram post photo ${currentSlide + 1} of ${carouselImages.length}` : ''} aria-hidden={index !== currentSlide} />)}
            </div>
-          <button className="instagram-post__carousel-button instagram-post__carousel-button--previous" type="button" aria-label="Previous photo" disabled={currentSlide === 0} onClick={() => setCurrentSlide((slide) => Math.max(0, slide - 1))}><ChevronLeft aria-hidden="true" /></button>
-          <button className="instagram-post__carousel-button instagram-post__carousel-button--next" type="button" aria-label="Next photo" disabled={currentSlide === carouselImages.length - 1} onClick={() => setCurrentSlide((slide) => Math.min(carouselImages.length - 1, slide + 1))}><ChevronRight aria-hidden="true" /></button>
+           <button className="instagram-post__carousel-button instagram-post__carousel-button--previous" type="button" aria-label="Previous photo" onClick={() => goTo(currentSlide - 1)}><ChevronLeft aria-hidden="true" /></button>
+           <button className="instagram-post__carousel-button instagram-post__carousel-button--next" type="button" aria-label="Next photo" onClick={() => goTo(currentSlide + 1)}><ChevronRight aria-hidden="true" /></button>
           <div className="instagram-post__indicators" aria-label="Choose photo">
-            {carouselImages.map((_, index) => <button key={index} type="button" aria-label={`Show photo ${index + 1}`} aria-current={currentSlide === index} onClick={() => setCurrentSlide(index)} />)}
+             {carouselImages.map((_, index) => <button key={index} type="button" aria-label={`Show photo ${index + 1}`} aria-current={currentSlide === index} onClick={() => goTo(index)} />)}
           </div>
         </div>
       ) : (
@@ -220,7 +214,7 @@ if (instagramRoot) {
       username="derek_gym_lules"
        userAvatar={derekLogo}
       images={[
-         instagram01, instagram02, instagram03, instagram04,
+          instagram01, instagram02, instagram03, instagram04, instagram05,
       ] as InstagramCarousel}
       caption="Entrená a tu manera, todos los días."
       likesCount={128}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://derek-gym-center.vercel.app/sitemap.xml

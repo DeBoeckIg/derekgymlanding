@@ -22,23 +22,24 @@
 .instagram-post__icon-button:hover, .instagram-post__icon-button:focus-visible { background: #1a2028; }
 .instagram-post__icon-button svg { width: 1.35rem; height: 1.35rem; stroke-width: 1.8; }
 .instagram-post__header .instagram-post__icon-button { margin-left: auto; }
-.instagram-post__media-stack { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; }
-.instagram-post__media { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: translate3d(8%, 0, 0) scale(.98); transition: transform .4s cubic-bezier(.2,.75,.25,1), opacity .4s ease; }
+.instagram-post__media-stack { position: relative; display: block; width: 100%; height: auto; min-height: 1px; aspect-ratio: 4 / 3; overflow: hidden; }
+.instagram-post__media { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; pointer-events: none; transform: translate3d(8%, 0, 0) scale(.98); transition: transform .4s cubic-bezier(.2,.75,.25,1), opacity .4s ease; }
 .instagram-post__media.is-active { opacity: 1; transform: translate3d(0, 0, 0) scale(1); z-index: 1; }
 .instagram-post__media.is-previous { transform: translate3d(-8%, 0, 0) scale(.98); }
 .instagram-post__media.is-next { transform: translate3d(8%, 0, 0) scale(.98); }
 .instagram-post__placeholder { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .instagram-post__carousel { position: relative; background: #080a0d; }
 .instagram-post__carousel:focus-visible { outline: 2px solid #f5f7fa; outline-offset: -2px; }
-.instagram-post__carousel-button { position: absolute; top: 50%; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; color: #fff; background: #080a0db8; border: 0; border-radius: 50%; cursor: pointer; transform: translateY(-50%); }
+.instagram-post__carousel-button { position: absolute; top: 50%; z-index: 2; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; color: #fff; background: #080a0db8; border: 0; border-radius: 50%; cursor: pointer; pointer-events: auto; transform: translateY(-50%); }
 .instagram-post__carousel-button:hover, .instagram-post__carousel-button:focus-visible { background: #080a0de8; }
 .instagram-post__carousel-button:disabled { opacity: .35; cursor: default; }
 .instagram-post__carousel-button svg { width: 1.25rem; height: 1.25rem; }
 .instagram-post__carousel-button--previous { left: .75rem; }
 .instagram-post__carousel-button--next { right: .75rem; }
-.instagram-post__indicators { position: absolute; bottom: .65rem; left: 50%; display: flex; gap: .35rem; transform: translateX(-50%); }
-.instagram-post__indicators button { width: 2rem; height: 2.75rem; padding: 0; background: transparent; border: 0; border-radius: 50%; cursor: pointer; }
-.instagram-post__indicators button[aria-current="true"] { background: transparent; }
+.instagram-post__indicators { position: absolute; bottom: .65rem; left: 50%; z-index: 2; display: flex; gap: .35rem; pointer-events: auto; transform: translateX(-50%); }
+.instagram-post__indicators button { position: relative; width: 2rem; height: 2.75rem; padding: 0; background: transparent; border: 0; border-radius: 50%; cursor: pointer; }
+.instagram-post__indicators button::before { content: ''; position: absolute; top: 50%; left: 50%; width: .45rem; height: .45rem; border-radius: 50%; background: #ffffffaa; transform: translate(-50%, -50%); transition: transform .2s ease, background-color .2s ease; }
+.instagram-post__indicators button[aria-current="true"]::before { background: #fff; transform: translate(-50%, -50%) scale(1.35); }
 .instagram-post__placeholder { background: linear-gradient(135deg, #1a2028, #080a0d); }
 @media (prefers-reduced-motion: reduce) { .instagram-post__media { transition: none; } }
 .instagram-post__actions { display: flex; gap: .25rem; margin: -.35rem 0 .5rem -.5rem; }
