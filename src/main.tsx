@@ -17,6 +17,11 @@ import instagram04 from '../assets/instagram-derek-04.jpeg'
 import derekLogo from '../assets/derek-logo.jpg'
 import gymBackground from '../assets/gym-background.jpg'
 import ctaGym from '../assets/cta-gym.jpg'
+import coachAbril from '../assets/coach-abril-salazar.png'
+import coachJesus from '../assets/coach-jesus-andrade.png'
+import coachGonzalo from '../assets/coach-gonzalo-aguero.png'
+import coachLuz from '../assets/coach-luz-gramajo.png'
+import coachJose from '../assets/coach-jose-diaz.png'
 
 type InstagramCarousel = [string, string, string, string]
 
@@ -144,7 +149,7 @@ export function DisciplineCarousel() {
         <div className="discipline-carousel__track">
           {disciplineSlides.map((imageUrl, index) => (
             <div className={`discipline-carousel__slide ${index === currentSlide ? 'is-active' : ''} ${index === (currentSlide - 1 + disciplineSlides.length) % disciplineSlides.length ? 'is-previous' : ''} ${index === (currentSlide + 1) % disciplineSlides.length ? 'is-next' : ''}`} role="group" aria-roledescription="slide" aria-label={`Discipline image ${index + 1} of ${disciplineSlides.length}`} aria-hidden={index !== currentSlide} key={index}>
-              <img src={imageUrl} alt={`Derek gym discipline ${index + 1}`} />
+              <img src={imageUrl} alt={`Derek gym discipline ${index + 1}`} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
             </div>
           ))}
         </div>
@@ -172,7 +177,7 @@ export function AboutCarousel() {
 
   return <div className="about-carousel" role="region" aria-roledescription="carousel" aria-label="Derek Gym Center photos" tabIndex={0} onKeyDown={(event) => { if (event.key === 'ArrowLeft') go(-1); if (event.key === 'ArrowRight') go(1) }}>
     <div className="about-carousel__viewport">
-      {aboutSlides.map((slide, index) => <div className={`about-carousel__slide ${index === current ? 'is-active' : ''}`} key={slide.src} role="group" aria-roledescription="slide" aria-label={`Photo ${index + 1} of ${aboutSlides.length}`} aria-hidden={index !== current}><img src={slide.src} alt={slide.alt} /></div>)}
+       {aboutSlides.map((slide, index) => <div className={`about-carousel__slide ${index === current ? 'is-active' : ''}`} key={slide.src} role="group" aria-roledescription="slide" aria-label={`Photo ${index + 1} of ${aboutSlides.length}`} aria-hidden={index !== current}><img src={slide.src} alt={slide.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" /></div>)}
       <button className="about-carousel__control about-carousel__control--previous" type="button" aria-label="Previous photo" onClick={() => go(-1)}><ChevronLeft aria-hidden="true" /></button>
       <button className="about-carousel__control about-carousel__control--next" type="button" aria-label="Next photo" onClick={() => go(1)}><ChevronRight aria-hidden="true" /></button>
     </div>
@@ -180,13 +185,13 @@ export function AboutCarousel() {
   </div>
 }
 
-type Coach = { name: string; schedule: string; className: string }
+type Coach = { name: string; schedule: string; className: string; photo: string }
 const coaches: Coach[] = [
-  { name: 'Abril Salazar', schedule: 'Lunes a viernes · 07:00 — 12:00', className: 'a1' },
-  { name: 'Jesús Andrade', schedule: 'Lunes a viernes · 12:00 — 18:00', className: 'a2' },
-  { name: 'Gonzalo Agüero', schedule: 'Lunes a viernes · 18:00 — 23:00', className: 'a3' },
-  { name: 'Luz Gramajo', schedule: 'Lunes a viernes · 18:00 — 23:00', className: 'a4' },
-  { name: 'José Díaz', schedule: 'Sábados · 08:00 — 12:00 y 16:00 — 21:00 · Domingos · 18:00 — 22:00', className: 'a5' },
+  { name: 'Abril Salazar', schedule: 'Lunes a viernes · 07:00 — 12:00', className: 'a1', photo: coachAbril },
+  { name: 'Jesús Andrade', schedule: 'Lunes a viernes · 12:00 — 18:00', className: 'a2', photo: coachJesus },
+  { name: 'Gonzalo Agüero', schedule: 'Lunes a viernes · 18:00 — 23:00', className: 'a3', photo: coachGonzalo },
+  { name: 'Luz Gramajo', schedule: 'Lunes a viernes · 18:00 — 23:00', className: 'a4', photo: coachLuz },
+  { name: 'José Díaz', schedule: 'Sábados · 08:00 — 12:00 y 16:00 — 21:00\nDomingos · 18:00 — 22:00', className: 'a5', photo: coachJose },
 ]
 
 function useCarousel(length: number, initial = 0, autoplay = true) {
@@ -201,14 +206,14 @@ function CarouselControls({ current, length, go, setCurrent, label }: { current:
   return <><button className="carousel-control carousel-control--previous" type="button" aria-label={`Previous ${label}`} onClick={() => go(-1)}><ChevronLeft aria-hidden="true" /></button><button className="carousel-control carousel-control--next" type="button" aria-label={`Next ${label}`} onClick={() => go(1)}><ChevronRight aria-hidden="true" /></button><div className="carousel-indicators" aria-label={`Choose ${label}`}>{Array.from({ length }, (_, index) => <button key={index} type="button" aria-label={`Show ${label} ${index + 1}`} aria-current={current === index} onClick={() => setCurrent(index)} />)}</div></>
 }
 
-export function CoachCarousel() { const carousel = useCarousel(coaches.length); return <div className="card-carousel coach-carousel" role="region" aria-roledescription="carousel" aria-label="Derek coaches" tabIndex={0} onMouseEnter={() => carousel.setPaused(true)} onMouseLeave={() => carousel.setPaused(false)} onFocus={() => carousel.setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) carousel.setPaused(false) }} onKeyDown={(event) => { if (event.key === 'ArrowLeft') carousel.go(-1); if (event.key === 'ArrowRight') carousel.go(1) }}><div className="carousel-card-track">{coaches.map((coach, index) => { const previous = (carousel.current - 1 + coaches.length) % coaches.length; const next = (carousel.current + 1) % coaches.length; return <article className={`trainer-card carousel-card ${index === carousel.current ? 'is-active' : ''} ${index === previous ? 'is-previous' : ''} ${index === next ? 'is-next' : ''}`} aria-hidden={index !== carousel.current} key={coach.name}><div className={`avatar ${coach.className}`}></div><b>{coach.name}</b><span className="trainer-schedule">{coach.schedule}</span></article> })}</div><CarouselControls {...carousel} length={coaches.length} label="coach" /></div> }
+export function CoachCarousel() { const carousel = useCarousel(coaches.length); return <div className="card-carousel coach-carousel" role="region" aria-roledescription="carousel" aria-label="Derek coaches" tabIndex={0} onMouseEnter={() => carousel.setPaused(true)} onMouseLeave={() => carousel.setPaused(false)} onFocus={() => carousel.setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) carousel.setPaused(false) }} onKeyDown={(event) => { if (event.key === 'ArrowLeft') carousel.go(-1); if (event.key === 'ArrowRight') carousel.go(1) }}><div className="carousel-card-track">{coaches.map((coach, index) => { const previous = (carousel.current - 1 + coaches.length) % coaches.length; const next = (carousel.current + 1) % coaches.length; return <article className={`trainer-card carousel-card ${index === carousel.current ? 'is-active' : ''} ${index === previous ? 'is-previous' : ''} ${index === next ? 'is-next' : ''}`} aria-hidden={index !== carousel.current} key={coach.name}><div className={`avatar ${coach.className}`}><img src={coach.photo} alt={`Portrait of ${coach.name}`} /></div><b>{coach.name}</b><span className="trainer-schedule">{coach.schedule}</span></article> })}</div><CarouselControls {...carousel} length={coaches.length} label="coach" /></div> }
 
 const plans = [
-  { type: 'Día', price: '$6000', detail: '', description: 'Ideal para entrenar cuando quieras.', featured: false },
-  { type: 'Mensual', price: '$30000', detail: '/mes', description: 'Constancia y acompañamiento todo el mes.', featured: true },
-  { type: 'Quincenal', price: '$18000', detail: '/15 días', description: 'Flexibilidad para mantener tu ritmo.', featured: false },
+  { type: 'Día', price: '$6.000,00', detail: '', description: 'Ideal para entrenar cuando quieras.', featured: false },
+  { type: 'Mensual', price: '$30.000,00', detail: '/mes', description: 'Constancia y acompañamiento todo el mes.', featured: true },
+  { type: 'Quincenal', price: '$18.000,00', detail: '/15 días', description: 'Flexibilidad para mantener tu ritmo.', featured: false },
 ]
-export function PlansCarousel() { const carousel = useCarousel(plans.length, 1, false); return <div className="card-carousel plans-carousel" role="region" aria-roledescription="carousel" aria-label="Derek plans" tabIndex={0} onFocus={() => carousel.setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) carousel.setPaused(false) }} onKeyDown={(event) => { if (event.key === 'ArrowLeft') carousel.go(-1); if (event.key === 'ArrowRight') carousel.go(1) }}><div className="carousel-card-track">{plans.map((plan, index) => { const previous = (carousel.current - 1 + plans.length) % plans.length; const next = (carousel.current + 1) % plans.length; return <article className={`plan carousel-card ${plan.featured ? 'featured' : ''} ${index === carousel.current ? 'is-active' : ''} ${index === previous ? 'is-previous' : ''} ${index === next ? 'is-next' : ''}`} aria-hidden={index !== carousel.current} key={plan.type}>{plan.featured && <label>Más elegido</label>}<span>{plan.type}</span><h3>{plan.price}<small>{plan.detail}</small></h3><p>{plan.description}</p><ul><li>Entrenador</li><li>Seguimiento</li><li>Rutina personalizada</li></ul><button className={`button ${plan.featured ? 'primary' : 'outline'} plan-btn`}>Elegir plan</button></article> })}</div><CarouselControls {...carousel} length={plans.length} label="plan" /></div> }
+export function PlansCarousel() { const carousel = useCarousel(plans.length, 1, false); return <div className="card-carousel plans-carousel" role="region" aria-roledescription="carousel" aria-label="Derek plans" tabIndex={0} onFocus={() => carousel.setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) carousel.setPaused(false) }} onKeyDown={(event) => { if (event.key === 'ArrowLeft') carousel.go(-1); if (event.key === 'ArrowRight') carousel.go(1) }}><div className="carousel-card-track">{plans.map((plan, index) => { const previous = (carousel.current - 1 + plans.length) % plans.length; const next = (carousel.current + 1) % plans.length; return <article className={`plan carousel-card ${plan.featured ? 'featured' : ''} ${index === carousel.current ? 'is-active' : ''} ${index === previous ? 'is-previous' : ''} ${index === next ? 'is-next' : ''}`} aria-hidden={index !== carousel.current} key={plan.type}>{plan.featured && <label>Más elegido</label>}<span>{plan.type}</span><h3>{plan.price}<small>{plan.detail}</small></h3><p>{plan.description}</p><ul><li>Entrenador</li><li>Rutina personalizada</li></ul><button className={`button ${plan.featured ? 'primary' : 'outline'} plan-btn`}>Elegir plan</button></article> })}</div><CarouselControls {...carousel} length={plans.length} label="plan" /></div> }
 
 const instagramRoot = document.getElementById('instagram-post-root')
 

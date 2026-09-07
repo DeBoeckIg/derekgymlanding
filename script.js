@@ -1,4 +1,5 @@
 const menuButton=document.querySelector('.menu-toggle');const nav=document.querySelector('nav');const toast=document.querySelector('.toast');
+if(!menuButton||!nav) throw new Error('Primary navigation is missing');
 const setMenuState=open=>{nav.classList.toggle('open',open);menuButton.setAttribute('aria-expanded',String(open));menuButton.setAttribute('aria-label',open?'Cerrar menú':'Abrir menú');nav.setAttribute('aria-hidden',String(!open));};
 setMenuState(false);
 menuButton.addEventListener('click',()=>setMenuState(!nav.classList.contains('open')));
@@ -8,5 +9,5 @@ const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entr
 document.querySelectorAll('.trainer-card').forEach(card=>observer.observe(card));
 const sectionLinks=[...nav.querySelectorAll('.nav-links a')];const trackedSections=sectionLinks.map(link=>document.querySelector(link.hash)).filter(Boolean);
 const activeObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){sectionLinks.forEach(link=>{const active=link.hash===`#${entry.target.id}`;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});}})},{rootMargin:'-35% 0px -55% 0px',threshold:0});trackedSections.forEach(section=>activeObserver.observe(section));
-document.querySelectorAll('.plan-btn').forEach(button=>button.addEventListener('click',()=>{toast.textContent='¡Excelente elección! Escribinos para activar tu plan.';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),3500)}));
-document.getElementById('year').textContent=new Date().getFullYear();
+document.querySelectorAll('.plan-btn').forEach(button=>button.addEventListener('click',()=>{if(!toast)return;toast.textContent='¡Excelente elección! Escribinos para activar tu plan.';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),3500)}));
+const year=document.getElementById('year');if(year)year.textContent=new Date().getFullYear();
