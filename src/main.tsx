@@ -234,8 +234,24 @@ const aboutRoot = document.getElementById('about-carousel-root')
 if (aboutRoot) createRoot(aboutRoot).render(<AboutCarousel />)
 const coachSection = document.getElementById('trainers')
 const coachRoot = document.createElement('div'); coachRoot.id = 'coach-carousel-root'
-if (coachSection) { coachSection.querySelector('.trainers')?.insertAdjacentElement('afterend', coachRoot); createRoot(coachRoot).render(<CoachCarousel />) }
+if (coachSection) {
+  coachSection.querySelector('.trainers')?.insertAdjacentElement('afterend', coachRoot)
+  try {
+    createRoot(coachRoot).render(<CoachCarousel />)
+    coachSection.classList.add('react-carousel-ready')
+  } catch (error) {
+    console.error('Coach carousel failed; keeping the static fallback visible.', error)
+  }
+}
 const plansSection = document.getElementById('planes')
 const plansRoot = document.createElement('div'); plansRoot.id = 'plans-carousel-root'
-if (plansSection) { plansSection.querySelector('.plans')?.insertAdjacentElement('afterend', plansRoot); createRoot(plansRoot).render(<PlansCarousel />) }
+if (plansSection) {
+  plansSection.querySelector('.plans')?.insertAdjacentElement('afterend', plansRoot)
+  try {
+    createRoot(plansRoot).render(<PlansCarousel />)
+    plansSection.classList.add('react-carousel-ready')
+  } catch (error) {
+    console.error('Plans carousel failed; keeping the static fallback visible.', error)
+  }
+}
 document.querySelector('.band h2 em')?.replaceChildren('Empezamos juntos.')

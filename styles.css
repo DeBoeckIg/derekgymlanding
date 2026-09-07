@@ -25,7 +25,7 @@ html,body{overflow-x:hidden}.menu-toggle{min-width:44px;min-height:44px}
 @media(min-width:701px){.plans{grid-template-columns:repeat(3,1fr)}}
 
 /* React carousels replace the legacy static grids without changing page flow. */
-#trainers>.trainers,#planes .plans{display:none}
+#trainers.react-carousel-ready>.trainers,#planes.react-carousel-ready .plans{display:none}
 .card-carousel{overflow:hidden}
 .carousel-card-track{position:relative;min-height:clamp(19rem,32vw,24rem);display:grid;isolation:isolate}
 .card-carousel .carousel-card{grid-area:1/1;width:min(100%,24rem);margin:auto;opacity:0;visibility:hidden;filter:blur(5px);transform:translate3d(0,0,0) scale(.78);transition:transform .55s cubic-bezier(.2,.75,.25,1),opacity .55s ease,filter .55s ease,visibility .55s}
@@ -108,7 +108,7 @@ img,iframe,svg{max-width:100%}.button,.nav-cta,.text-link{touch-action:manipulat
 @media(prefers-reduced-motion:reduce){.about-carousel__slide{transition:none}}
 
 /* Final carousel state overrides keep adjacent previews visible. */
-#trainers>.trainers,#planes .plans{display:none}
+#trainers.react-carousel-ready>.trainers,#planes.react-carousel-ready .plans{display:none}
 .card-carousel{overflow:hidden}
 .carousel-card-track{position:relative;min-height:clamp(19rem,32vw,24rem);isolation:isolate}
 .card-carousel .carousel-card{filter:blur(5px);transform:translate3d(0,0,0) scale(.78);transition:transform .55s cubic-bezier(.2,.75,.25,1),opacity .55s ease,filter .55s ease,visibility .55s}
